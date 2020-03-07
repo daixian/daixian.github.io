@@ -1,0 +1,1057 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Unity3d和OpenCV的相机模型, 网站标题">
+    <meta name="description" content="这主要是游戏引擎里的相机模型和OpenCV里的相机模型之间的相互印证的实验。
+一、Unity的相机模型考虑u3d里的相机是一个完美的针孔模型的相机，使用3d游戏里的变换方法来作出一个3D点和屏幕点（等于相机画面）的推导。
+现在有u3d场景中">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Unity3d和OpenCV的相机模型 | 网站标题</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+
+<header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">网站标题</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">网站标题</div>
+        <div class="logo-desc">
+            
+            网站描述
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/image/cameramodel/clover.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        Unity3d和OpenCV的相机模型
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/OpenCV/" target="_blank">
+                                <span class="chip bg-color">OpenCV</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/OpenCV/" class="post-category" target="_blank">
+                                OpenCV
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-07-19
+                </div>
+
+                
+				
+				
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>这主要是游戏引擎里的相机模型和OpenCV里的相机模型之间的相互印证的实验。</p>
+<h2 id="一、Unity的相机模型"><a href="#一、Unity的相机模型" class="headerlink" title="一、Unity的相机模型"></a>一、Unity的相机模型</h2><p>考虑u3d里的相机是一个完美的针孔模型的相机，使用3d游戏里的变换方法来作出一个3D点和屏幕点（等于相机画面）的推导。</p>
+<p>现在有u3d场景中的一个相机的fov是60度，L相机放在坐标（0，0，0）的位置，R相机放在（0.05，0，0）的位置。左边的相机，fov是60度，近裁剪面是0.01，远裁剪面是100，显示画面是1920x1080，这个相机的现在的基本的信息是:</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+    <span class="token property">"worldToCameraMatrix"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"m00"</span><span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m10"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m20"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m30"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m01"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m11"</span><span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m21"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m31"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m02"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m12"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m22"</span><span class="token operator">:</span> -<span class="token number">1.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m32"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m03"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m13"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m23"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m33"</span><span class="token operator">:</span> <span class="token number">1.0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"projectionMatrix"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"m00"</span><span class="token operator">:</span> <span class="token number">0.974278569221497</span><span class="token punctuation">,</span>
+        <span class="token property">"m10"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m20"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m30"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m01"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m11"</span><span class="token operator">:</span> <span class="token number">1.73205077648163</span><span class="token punctuation">,</span>
+        <span class="token property">"m21"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m31"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m02"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m12"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m22"</span><span class="token operator">:</span> -<span class="token number">1.00020003318787</span><span class="token punctuation">,</span>
+        <span class="token property">"m32"</span><span class="token operator">:</span> -<span class="token number">1.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m03"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m13"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token property">"m23"</span><span class="token operator">:</span> -<span class="token number">0.0200020000338554</span><span class="token punctuation">,</span>
+        <span class="token property">"m33"</span><span class="token operator">:</span> <span class="token number">0.0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"transform"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"position"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"x"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+            <span class="token property">"y"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+            <span class="token property">"z"</span><span class="token operator">:</span> <span class="token number">0.0</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"x"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+            <span class="token property">"y"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+            <span class="token property">"z"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+            <span class="token property">"w"</span><span class="token operator">:</span> <span class="token number">1.0</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Camera1"</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>观察空间对z分量取反了，所以目测worldToCameraMatrix矩阵里有一个-1，<img src="https://latex.codecogs.com/gif.latex?%5Cbegin%7Bbmatrix%7D%201%260%260%260%5C%5C%200%261%260%260%5C%5C%200%260%26-1%260%5C%5C%200%260%260%261%20%5Cend%7Bbmatrix%7D" alt="worldToCameraMatrix"><br><img src="https://latex.codecogs.com/gif.latex?%5Cbegin%7Bbmatrix%7D%203.41707730293274%20%26%200%20%260%260%5C%5C%200%20%261.73205077648163%20%26%200%260%5C%5C%200%20%260%26-1.00020003318787%26-0.0200020000338554%5C%5C%200%20%260%26-1.0%261%20%5Cend%7Bbmatrix%7D" alt="projectionMatrix"><br>根据3D渲染的变换计算方法，现在已经可以使用c++完成从3D空间中的一个点到屏幕上一点坐标的这个计算，已经核对和U3D中的结果一致。<a href="https://github.com/daixian/Math3D/blob/master/Math3D/Math3D/UnityCamera.h" target="_blank" rel="noopener">UnityCamera.h</a></p>
+<p>考虑这样一个相机模型在opencv里面会是个啥样的。。。</p>
+<h2 id="二、使用U3D渲染的无畸变图片来做标定实验"><a href="#二、使用U3D渲染的无畸变图片来做标定实验" class="headerlink" title="二、使用U3D渲染的无畸变图片来做标定实验"></a>二、使用U3D渲染的无畸变图片来做标定实验</h2><p>相机L，R成水平排列，位置和上面的第一节描述一致。现在制作标定板物体：</p>
+<ul>
+<li>板子的像素图片是960x1511，预制体大小是0.96x1.511</li>
+<li>从88像素到760像素，中间是3个间距，所以一个间距是224像素。</li>
+<li>从195像素到1315像素，中间是5个间距，所以一个间距是224像素。</li>
+<li>224像素对应的距离就是0.224<br>u3d渲染得到的标定图片如下，无畸变。。<br><img src="/image/cameramodel/2-1.png" alt="标定用图片"><br>标定之后计算出来的板子原始位置都很精确，板子很直，误差也很小。。<br><img src="/image/cameramodel/2-2.jpg" alt="根据参数反求的标定板，结果是0.224"><br><img src="/image/cameramodel/2-3.jpg" alt="标定板笔直。。"><br>所以，使用U3D渲染出来的画面可以轻松的标定相机。</li>
+</ul>
+<h3 id="参数分析1：统一相机画面在640x360"><a href="#参数分析1：统一相机画面在640x360" class="headerlink" title="参数分析1：统一相机画面在640x360"></a>参数分析1：统一相机画面在640x360</h3><p>把1920x1080的图片的点坐标转换成640x360的图片比例计算出来的结果是：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">M1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">3.1145309294435958e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">3.1981847499872049e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">3.1143397076999474e+02</span><span class="token punctuation">,</span> <span class="token number">1.7979797969812509e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1. </span><span class="token punctuation">]</span>
+<span class="token key atrule">D1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">1</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">5</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.9639309936262010e-04</span><span class="token punctuation">,</span> <span class="token number">-1.0123185609157770e-03</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">6.8767722366737535e-04 </span><span class="token punctuation">]</span>
+<span class="token key atrule">M2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">3.1145573222517822e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">3.1981447040462308e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">3.1143841438146063e+02</span><span class="token punctuation">,</span> <span class="token number">1.7979177117828206e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1. </span><span class="token punctuation">]</span>
+<span class="token key atrule">D2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">1</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">5</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.7158745285466290e-04</span><span class="token punctuation">,</span> <span class="token number">-8.7318865791043490e-04</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">5.5968577019243357e-04 </span><span class="token punctuation">]</span>
+<span class="token key atrule">R</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">9.9999999991701083e-01</span><span class="token punctuation">,</span> <span class="token number">1.2953468591120522e-06</span><span class="token punctuation">,</span>
+       <span class="token number">1.2817976730929375e-05</span><span class="token punctuation">,</span> <span class="token number">-1.2955983624361653e-06</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999999980666587e-01</span><span class="token punctuation">,</span> <span class="token number">1.9621152483399704e-05</span><span class="token punctuation">,</span>
+       <span class="token number">-1.2817951312253886e-05</span><span class="token punctuation">,</span> <span class="token number">-1.9621169088720433e-05</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999999972535492e-01 </span><span class="token punctuation">]</span>
+<span class="token key atrule">T</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">1</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">4.9996304610299518e-02</span><span class="token punctuation">,</span> <span class="token number">4.9630650415325490e-08</span><span class="token punctuation">,</span>
+       <span class="token number">2.2170213223960013e-05 </span><span class="token punctuation">]</span>
+<span class="token key atrule">E</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">2.8087528687204077e-11</span><span class="token punctuation">,</span> <span class="token number">-2.2170214193485139e-05</span><span class="token punctuation">,</span>
+       <span class="token number">4.9195645267437877e-08</span><span class="token punctuation">,</span> <span class="token number">2.2811063420407559e-05</span><span class="token punctuation">,</span>
+       <span class="token number">9.8101466468592521e-07</span><span class="token punctuation">,</span> <span class="token number">-4.9996304312391000e-02</span><span class="token punctuation">,</span>
+       <span class="token number">-1.1440578079217043e-07</span><span class="token punctuation">,</span> <span class="token number">4.9996304600569239e-02</span><span class="token punctuation">,</span>
+       <span class="token number">9.8098448020066426e-07 </span><span class="token punctuation">]</span>
+<span class="token key atrule">F</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">8.3735822730697772e-10</span><span class="token punctuation">,</span> <span class="token number">-6.6098912885294780e-04</span><span class="token punctuation">,</span>
+       <span class="token number">1.1930103267696988e-01</span><span class="token punctuation">,</span> <span class="token number">6.8009165111491325e-04</span><span class="token punctuation">,</span>
+       <span class="token number">2.9249879144060730e-05</span><span class="token punctuation">,</span> <span class="token number">-4.6447335282452690e+02</span><span class="token punctuation">,</span>
+       <span class="token number">-1.2333743779072519e-01</span><span class="token punctuation">,</span> <span class="token number">4.6446334959129268e+02</span><span class="token punctuation">,</span> <span class="token number">1. </span><span class="token punctuation">]</span>
+<span class="token key atrule">R1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">-9.9999989591309058e-01</span><span class="token punctuation">,</span> <span class="token number">-2.2793319751775300e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-4.5625498635018042e-04</span><span class="token punctuation">,</span> <span class="token number">2.2838083322875222e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-9.9999999994926858e-01</span><span class="token punctuation">,</span> <span class="token number">-9.8105656814498609e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-4.5625496396549788e-04</span><span class="token punctuation">,</span> <span class="token number">-9.8116066592378730e-06</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999989586756477e-01 </span><span class="token punctuation">]</span>
+<span class="token key atrule">R2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">-9.9999990168131858e-01</span><span class="token punctuation">,</span> <span class="token number">-9.9268627796705807e-07</span><span class="token punctuation">,</span>
+       <span class="token number">-4.4343699433431108e-04</span><span class="token punctuation">,</span> <span class="token number">9.8833600549133372e-07</span><span class="token punctuation">,</span>
+       <span class="token number">-9.9999999995138811e-01</span><span class="token punctuation">,</span> <span class="token number">9.8105698327887659e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-4.4343700405157280e-04</span><span class="token punctuation">,</span> <span class="token number">9.8101306034788079e-06</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999990163368768e-01 </span><span class="token punctuation">]</span>
+<span class="token key atrule">P1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">2.4910197018477044e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">3.2047301483154297e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">2.4910197018477044e+02</span><span class="token punctuation">,</span> <span class="token number">1.8020493888854980e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1.</span><span class="token punctuation">,</span>
+       <span class="token number">0. </span><span class="token punctuation">]</span>
+<span class="token key atrule">P2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">2.4910197018477044e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">3.2046898651123047e+02</span><span class="token punctuation">,</span>
+       <span class="token number">-1.2454179204862012e+01</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">2.4910197018477044e+02</span><span class="token punctuation">,</span>
+       <span class="token number">1.8020493888854980e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1.</span><span class="token punctuation">,</span> <span class="token number">0. </span><span class="token punctuation">]</span>
+<span class="token key atrule">Q</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">-3.2047301483154297e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">-1.8020493888854980e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">2.4910197018477044e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">2.0001476298616534e+01</span><span class="token punctuation">,</span> <span class="token number">-8.0572353253704293e-02 </span><span class="token punctuation">]</span></code></pre>
+<p>上面的标定结果数据里看，首先L相机和R相机的M矩阵基本是完全相等的，它们都是：</p>
+<pre class=" language-c"><code class="language-c"><span class="token comment" spellcheck="true">//M矩阵</span>
+丨 <span class="token number">311.45</span>     <span class="token number">0</span>      <span class="token number">319.8</span>  丨
+丨 <span class="token number">0</span>        <span class="token number">311.43</span>   <span class="token number">179.79</span> 丨
+丨 <span class="token number">0</span>          <span class="token number">0</span>        <span class="token number">1</span>    丨</code></pre>
+<p>fx和fy是311.45。cx是319.9（640的一半是320），cy是179.79（360的一半是180），即c是在正中心。<br>两个相机的D不太一致，但是K1，k2，k3都是10^-4的级别，很小（目前实际的相机一般K1，K2，K3在10^-1，-2的级别），可以认为它们基本上不需要畸变的校正。</p>
+<h4 id="验证内参矩阵中焦距"><a href="#验证内参矩阵中焦距" class="headerlink" title="验证内参矩阵中焦距"></a>验证内参矩阵中焦距</h4><p>假设现在在z等1的位置有一个物体（0.5, 0.3, 1）,使用u3d渲染相机模型计算当640x360的画面的时候渲染结果点在 (475.88, 86.469)。<br><img src="/image/cameramodel/2-4.jpg" alt="红色物体坐标为（0.5, 0.3, 1）"><br>使用前面写的u3d相机模型计算一个精确结果:</p>
+<pre class=" language-cpp"><code class="language-cpp">    dxlib<span class="token operator">::</span>UnityCamera cam<span class="token punctuation">;</span>
+    cam<span class="token punctuation">.</span>position <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    cam<span class="token punctuation">.</span><span class="token function">setEulerAngle</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cam<span class="token punctuation">.</span>screenSize <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">640</span><span class="token punctuation">,</span> <span class="token number">360</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    cam<span class="token punctuation">.</span><span class="token function">updateW2C</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cam<span class="token punctuation">.</span><span class="token function">updateProj</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    Eigen<span class="token operator">::</span>Vector2d screenPoint<span class="token punctuation">;</span>
+    <span class="token keyword">bool</span> success <span class="token operator">=</span> cam<span class="token punctuation">.</span><span class="token function">point2Screen</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token number">0.3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">,</span> screenPoint<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//计算结果是 screenPoint = (475.88, 86.469)</span></code></pre>
+<p>使用opencv里相机内参的M矩阵乘以这个物体点，得到的结果是:</p>
+<blockquote>
+<p>{ 475.54502147090028,  273.22817092912351,  1.0000000000000000 }</p>
+</blockquote>
+<p>这个结果x轴坐标对应无误，y轴上opencv的相机模型结果是273.22(360-86.469=273.3，所以它的画面uv坐标系是以左下角为原点的，可以理解当x=0,y=0的时候，对应屏幕点的值是2分之1屏幕宽和2分之1屏幕高的正值，屏幕中心点在坐标系中都是正值，所以原点在左下角)。所以相机的内参矩阵中的f的物理含义可以理解为在1米远处的一米长度的物体在画面上代表了多少像素，然后再结合画面图像的大小也可以确定出相机的视野范围。</p>
+<pre class=" language-c"><code class="language-c"><span class="token comment" spellcheck="true">//使用这个内参矩阵的公式进行计算,计算完了之后的最终结果应该要除以z</span>
+丨 <span class="token number">311.45</span>     <span class="token number">0</span>      <span class="token number">319.8</span>  丨  丨<span class="token number">0.5</span>丨
+丨 <span class="token number">0</span>        <span class="token number">311.43</span>   <span class="token number">179.79</span> 丨<span class="token operator">*</span> 丨<span class="token number">0.3</span>丨 <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">475.545</span><span class="token punctuation">,</span> <span class="token number">273.228</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">}</span>
+丨 <span class="token number">0</span>         <span class="token number">0</span>         <span class="token number">1</span>    丨  丨 <span class="token number">1</span> 丨</code></pre>
+<p><font color="#FF1493">所以结论：<strong>使用内参矩阵计算和3D引擎里面的投影矩阵的计算结果是一致的，在3D游戏引擎里面使用一个4x4的投影矩阵，然后进行除w的计算。在opencv中这一步可以直接使用内参矩阵来确定。如果是在3D游戏引擎的相机中，那么相机模型就是一个完美的针孔相机，cx和cy是画面中心，内参数矩阵实际上只有一个fx=fy未知数需要确定，那么如果知道投影矩阵应该只要一对3d点和屏幕2d点即可以求出结果。另外如果已知FOV也可以直接根据FOV的定义求出焦距fx和fy。</strong></font></p>
+<pre class=" language-cpp"><code class="language-cpp"><span class="token comment" spellcheck="true">///根据FOV和纵横比计算投影矩阵和OpenCV相机模型的内参矩阵. </span>
+<span class="token keyword">void</span> <span class="token function">updateProj</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+       <span class="token comment" spellcheck="true">//这里横纵比实际上还是需要一个Viewport Rect中的W和H属性共同决定</span>
+       <span class="token keyword">double</span> aspect <span class="token operator">=</span> screenSize<span class="token punctuation">.</span><span class="token function">x</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>screenSize<span class="token punctuation">.</span><span class="token function">y</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+       <span class="token comment" spellcheck="true">//公式推导见冯乐乐的Shader书P79,第一个公式M_frustum,书中图2有笔误</span>
+       projectionMatrix <span class="token operator">&lt;&lt;</span> 
+       <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">/</span> <span class="token function">tan</span><span class="token punctuation">(</span><span class="token punctuation">(</span>FOV <span class="token operator">/</span> <span class="token number">180</span> <span class="token operator">*</span> M_PI<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">/</span> aspect<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span>
+       <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token function">tan</span><span class="token punctuation">(</span><span class="token punctuation">(</span>FOV <span class="token operator">/</span> <span class="token number">180</span> <span class="token operator">*</span> M_PI<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span>
+       <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token punctuation">(</span>Far <span class="token operator">+</span> Near<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>Far <span class="token operator">-</span> Near<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">2</span> <span class="token operator">*</span> Near <span class="token operator">*</span> Far <span class="token operator">/</span> <span class="token punctuation">(</span>Far <span class="token operator">-</span> Near<span class="token punctuation">)</span><span class="token punctuation">,</span>
+       <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+       <span class="token comment" spellcheck="true">//根据FOV计算相机内参矩阵,内参矩阵中的f的物理含义可以理解为:</span>
+       <span class="token comment" spellcheck="true">//在1米远处的一米长度的物体在画面上代表了多少像素</span>
+       <span class="token keyword">double</span> fx <span class="token operator">=</span> <span class="token punctuation">(</span>screenSize<span class="token punctuation">.</span><span class="token function">y</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token function">tan</span><span class="token punctuation">(</span><span class="token punctuation">(</span>FOV <span class="token operator">/</span> <span class="token number">180</span> <span class="token operator">*</span> M_PI<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       ocvCameraMatrix <span class="token operator">&lt;&lt;</span> 
+       fx<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>screenSize<span class="token punctuation">.</span><span class="token function">x</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">,</span>
+       <span class="token number">0</span><span class="token punctuation">,</span> fx<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>screenSize<span class="token punctuation">.</span><span class="token function">y</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">,</span>
+       <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="关于立体标定结果的RT"><a href="#关于立体标定结果的RT" class="headerlink" title="关于立体标定结果的RT"></a>关于立体标定结果的RT</h4><p>RT参数没什么悬念，R矩阵结果是1和2相机之间的旋转矩阵，其中目前相对没有旋转.</p>
+<blockquote>
+<p>@param R Output rotation matrix between the 1st and the 2nd camera coordinate systems.<br>@param T Output translation vector between the coordinate systems of the cameras.</p>
+</blockquote>
+<ul>
+<li>R参数的矩阵是:<pre class=" language-c"><code class="language-c">丨 <span class="token number">1</span>  <span class="token number">0</span>  <span class="token number">0</span> 丨
+丨 <span class="token number">0</span>  <span class="token number">1</span>  <span class="token number">0</span> 丨
+丨 <span class="token number">0</span>  <span class="token number">0</span>  <span class="token number">1</span> 丨</code></pre>
+</li>
+<li>T是(0.05, 0, 0)，在u3d场景中R相机确实是在L相机的左边0.05的位置，嗯它没有闹什么幺蛾子。</li>
+</ul>
+<h4 id="本征矩阵E和基本矩阵F"><a href="#本征矩阵E和基本矩阵F" class="headerlink" title="本征矩阵E和基本矩阵F"></a>本征矩阵E和基本矩阵F</h4><p>书上说，本征矩阵E包含关于物理空间中两个摄像机的平移和旋转的信息，除了包含E中相同的信息外，矩阵F还包含两个相机的内参数。由于F包含内参数信息，它可以在像素坐标系上将两台相机关联。但是E矩阵是一个3x3的矩阵，它是如何包含平移旋转。。F也是一个3x3的矩阵，不懂。。</p>
+<h4 id="R和P矩阵"><a href="#R和P矩阵" class="headerlink" title="R和P矩阵"></a>R和P矩阵</h4><p>R1，R2是左右摄像机平面间的行对准的3x3标定旋转矩阵（未仔细验证含义，在上面的例子中它几乎是无旋转的单位矩阵）。<br>p1矩阵的左边3列是newCameraMatrix：</p>
+<pre class=" language-c"><code class="language-c"><span class="token operator">|</span> <span class="token number">249.10</span>     <span class="token number">0</span>     <span class="token number">320.473</span>     <span class="token number">0</span>  <span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">0</span>      <span class="token number">249.10</span>   <span class="token number">180.205</span>     <span class="token number">0</span>  <span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">0</span>         <span class="token number">0</span>        <span class="token number">1</span>        <span class="token number">0</span>  <span class="token operator">|</span></code></pre>
+<p>因为这个标定的相机是完美的相机，误差全来自标记点的中心计算，所以p2矩阵和p1矩阵数值上几乎完全一样，实际标定的相机还是有待确认一下。</p>
+<h3 id="参数分析2：相机画面是1920x1080"><a href="#参数分析2：相机画面是1920x1080" class="headerlink" title="参数分析2：相机画面是1920x1080"></a>参数分析2：相机画面是1920x1080</h3><p>把1920x1080的图片的点坐标不作转换的图片比例计算出来的结果是：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">M1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#三倍关系(和640x360的比较)</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">9.3435903472785969e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">9.5945537660556943e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">9.3430167531283428e+02</span><span class="token punctuation">,</span> <span class="token number">5.3939395064402299e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1. </span><span class="token punctuation">]</span>
+<span class="token key atrule">D1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">1</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">5</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.9657924861968512e-04</span><span class="token punctuation">,</span> <span class="token number">-1.0128202942453653e-03</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">6.8803465135148568e-04 </span><span class="token punctuation">]</span>
+<span class="token key atrule">M2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#三倍关系</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">9.3436697656807200e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">9.5944337092771116e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">9.3431501493472899e+02</span><span class="token punctuation">,</span> <span class="token number">5.3937529316686357e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1. </span><span class="token punctuation">]</span>
+<span class="token key atrule">D2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> 
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">1</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">5</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.7176203195778768e-04</span><span class="token punctuation">,</span> <span class="token number">-8.7369521074086797e-04</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">5.6006093191186845e-04 </span><span class="token punctuation">]</span>
+<span class="token key atrule">R</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#一致</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">9.9999999991701327e-01</span><span class="token punctuation">,</span> <span class="token number">1.2966020610656008e-06</span><span class="token punctuation">,</span>
+       <span class="token number">1.2817655546288390e-05</span><span class="token punctuation">,</span> <span class="token number">-1.2968539905038601e-06</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999999980600174e-01</span><span class="token punctuation">,</span> <span class="token number">1.9654889959296845e-05</span><span class="token punctuation">,</span>
+       <span class="token number">-1.2817630059233700e-05</span><span class="token punctuation">,</span> <span class="token number">-1.9654906580291701e-05</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999999972469655e-01 </span><span class="token punctuation">]</span>
+<span class="token key atrule">T</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#一致</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">1</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">4.9996288610474726e-02</span><span class="token punctuation">,</span> <span class="token number">4.8792677635307373e-08</span><span class="token punctuation">,</span>
+       <span class="token number">2.2200907182445024e-05 </span><span class="token punctuation">]</span>
+<span class="token key atrule">E</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#一致</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">2.8165928580830823e-11</span><span class="token punctuation">,</span> <span class="token number">-2.2200908137153606e-05</span><span class="token punctuation">,</span>
+       <span class="token number">4.8356321234207064e-08</span><span class="token punctuation">,</span> <span class="token number">2.2841741112346385e-05</span><span class="token punctuation">,</span>
+       <span class="token number">9.8270116774219296e-07</span><span class="token punctuation">,</span> <span class="token number">-4.9996288312146996e-02</span><span class="token punctuation">,</span>
+       <span class="token number">-1.1363056402613507e-07</span><span class="token punctuation">,</span> <span class="token number">4.9996288600712271e-02</span><span class="token punctuation">,</span>
+       <span class="token number">9.8267092560439191e-07 </span><span class="token punctuation">]</span>
+<span class="token key atrule">F</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#值为三分之一</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">9.3212132929986778e-11</span><span class="token punctuation">,</span> <span class="token number">-7.3476045373119066e-05</span><span class="token punctuation">,</span>
+       <span class="token number">3.9781970510988203e-02</span><span class="token punctuation">,</span> <span class="token number">7.5596507090177478e-05</span><span class="token punctuation">,</span>
+       <span class="token number">3.2525251129856912e-06</span><span class="token punctuation">,</span> <span class="token number">-1.5467947904930654e+02</span><span class="token punctuation">,</span>
+       <span class="token number">-4.1126344642009365e-02</span><span class="token punctuation">,</span> <span class="token number">1.5467614324418986e+02</span><span class="token punctuation">,</span> <span class="token number">1. </span><span class="token punctuation">]</span>
+<span class="token key atrule">R1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#一致</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">-9.9999989563291225e-01</span><span class="token punctuation">,</span> <span class="token number">-2.2637999788616374e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-4.5686873345384115e-04</span><span class="token punctuation">,</span> <span class="token number">2.2682900638376881e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-9.9999999994913813e-01</span><span class="token punctuation">,</span> <span class="token number">-9.8274361473115049e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-4.5686871118324910e-04</span><span class="token punctuation">,</span> <span class="token number">-9.8284714324625051e-06</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999989558718538e-01 </span><span class="token punctuation">]</span>
+<span class="token key atrule">R2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#一致</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">-9.9999990140884654e-01</span><span class="token punctuation">,</span> <span class="token number">-9.7592589726803222e-07</span><span class="token punctuation">,</span>
+       <span class="token number">-4.4405106080175951e-04</span><span class="token punctuation">,</span> <span class="token number">9.7156210776719249e-07</span><span class="token punctuation">,</span>
+       <span class="token number">-9.9999999995123878e-01</span><span class="token punctuation">,</span> <span class="token number">9.8274403025738818e-06</span><span class="token punctuation">,</span>
+       <span class="token number">-4.4405107037095537e-04</span><span class="token punctuation">,</span> <span class="token number">9.8270079104873008e-06</span><span class="token punctuation">,</span>
+       <span class="token number">9.9999990136103345e-01 </span><span class="token punctuation">]</span>
+<span class="token key atrule">P1</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#数值为3倍</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">7.4730558351663683e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">9.6142030334472656e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">7.4730558351663683e+02</span><span class="token punctuation">,</span> <span class="token number">5.4061483764648438e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1.</span><span class="token punctuation">,</span>
+       <span class="token number">0. </span><span class="token punctuation">]</span>
+<span class="token key atrule">P2</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#数值为3倍</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">3</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">7.4730558351663683e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">9.6140821838378906e+02</span><span class="token punctuation">,</span>
+       <span class="token number">-3.7362509317329881e+01</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">7.4730558351663683e+02</span><span class="token punctuation">,</span>
+       <span class="token number">5.4061483764648438e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1.</span><span class="token punctuation">,</span> <span class="token number">0. </span><span class="token punctuation">]</span>
+<span class="token key atrule">Q</span><span class="token punctuation">:</span> <span class="token tag">!!opencv-matrix</span> <span class="token comment" spellcheck="true">#数值为3倍</span>
+   <span class="token key atrule">rows</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">cols</span><span class="token punctuation">:</span> <span class="token number">4</span>
+   <span class="token key atrule">dt</span><span class="token punctuation">:</span> d
+   <span class="token key atrule">data</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token number">1.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">-9.6142030334472656e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">1.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">-5.4061483764648438e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">7.4730558351663683e+02</span><span class="token punctuation">,</span> <span class="token number">0.</span><span class="token punctuation">,</span>
+       <span class="token number">0.</span><span class="token punctuation">,</span> <span class="token number">2.0001482694044149e+01</span><span class="token punctuation">,</span> <span class="token number">-2.4171713704960579e-01 </span><span class="token punctuation">]</span></code></pre>
+<p>M矩阵是:</p>
+<pre class=" language-c"><code class="language-c">丨 <span class="token number">934.35</span>     <span class="token number">0</span>      <span class="token number">959.4</span>  丨
+丨 <span class="token number">0</span>        <span class="token number">934.30</span>   <span class="token number">539.39</span> 丨
+丨 <span class="token number">0</span>          <span class="token number">0</span>        <span class="token number">1</span>    丨</code></pre>
+<p>fx和fy基本相等为934，于是现在f是640时候画面的3倍。cx为959.4（1920的一半为960），cy为539.39（1080的一半为540）。</p>
+
+            </div>
+            <hr/>
+
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        <p class="reprint-tip">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;
+            <span>转载规则</span>
+        </p>
+        
+            <div class="center-align">
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
+                    <img alt=""
+                         style="border-width:0"
+                         src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
+                </a>
+            </div>
+            <br/>
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
+                  property="dct:title" rel="dct:type">
+                    《Unity3d和OpenCV的相机模型》
+                </span> 由
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/Unity3d和OpenCV的相机模型/" property="cc:attributionName"
+               rel="cc:attributionURL">
+                daixian
+            </a> 采用
+            <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
+                知识共享署名 4.0 国际许可协议
+            </a>进行许可。
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/systemd设置开机启动服务/">
+                    <div class="card-image">
+                        
+                        <img src="/image/systemd/clover.jpg" class="responsive-img" alt="使用systemd设置开机启动服务">
+                        
+                        <span class="card-title">使用systemd设置开机启动服务</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            买了一个友善的nanopiM4玩，smb服务和bt下载和内网穿透搭起来之后，日思夜想终于又买了一个nas的扩展板…现在有些软件希望它开机就自动启动。图中小机器的bt远程下载
+开机启动：挂载硬盘准备一个sh脚本文件这个硬盘需要设置它自动休眠，
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-04
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/运维技术/" class="post-category" target="_blank">
+                                    运维技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
+            </div>
+            <div class="card">
+                <a href="/Unity3d和OpenCV的相机模型/">
+                    <div class="card-image">
+                        
+                        <img src="/image/cameramodel/clover.jpg" class="responsive-img" alt="Unity3d和OpenCV的相机模型">
+                        
+                        <span class="card-title">Unity3d和OpenCV的相机模型</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            这主要是游戏引擎里的相机模型和OpenCV里的相机模型之间的相互印证的实验。
+一、Unity的相机模型考虑u3d里的相机是一个完美的针孔模型的相机，使用3d游戏里的变换方法来作出一个3D点和屏幕点（等于相机画面）的推导。
+现在有u3d场景中
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-07-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/OpenCV/" class="post-category" target="_blank">
+                                    OpenCV
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/OpenCV/" target="_blank">
+                        <span class="chip bg-color">OpenCV</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            本站由&copy;<a href="https://daixian.github.io/" target="_blank">daixian</a>基于
+            <a href="https://hexo.io/" target="_blank">Hexo</a> 的
+            <a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">hexo-theme-matery</a>主题搭建.
+
+            
+
+            
+			
+                <br>
+                
+                <span id="busuanzi_container_site_pv">
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+                </span>
+                
+                
+                <span id="busuanzi_container_site_uv">
+                    <i class="fa fa-users"></i>
+                    次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                </span>
+                
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/daixian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:amano_tooko@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=449174310" class="tooltipped" data-tooltip="QQ联系我: 449174310" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+<!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+<script src="/libs/materialize/materialize.min.js"></script>
+<script src="/libs/masonry/masonry.pkgd.min.js"></script>
+<script src="/libs/aos/aos.js"></script>
+<script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+<script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+<script src="/js/matery.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    <script src="/libs/others/clicklove.js"></script>
+
+
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+
+
+</body>
+</html>
